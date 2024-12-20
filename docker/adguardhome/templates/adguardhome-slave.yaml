@@ -43,7 +43,7 @@ services:
       - PUID=1001
       - PGID=1000
       - TZ=Europe/Moscow
-#      - CONFIGFILE=/config/adguardhome-sync.yaml #optional
+      - CONFIGFILE=/config/adguardhome-sync.yaml #optional
     volumes:
       - sync_config:/config
     ports:

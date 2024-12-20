@@ -10,7 +10,6 @@ networks:
 volumes:
   work:
   conf:
-  sync_config:
 
 services:
   adguard:
@@ -34,18 +33,4 @@ services:
     networks:
       net:
         ipv4_address: 172.18.0.2
-    restart: unless-stopped
-
-  adguardhome-sync:
-    image: lscr.io/linuxserver/adguardhome-sync:latest
-    container_name: sync
-    environment:
-      - PUID=1001
-      - PGID=1000
-      - TZ=Europe/Moscow
-#      - CONFIGFILE=/config/adguardhome-sync.yaml #optional
-    volumes:
-      - sync_config:/config
-    ports:
-      - 18003:8080
     restart: unless-stopped
