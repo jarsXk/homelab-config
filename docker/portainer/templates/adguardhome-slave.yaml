@@ -1,0 +1,51 @@
+version: '3'
+
+networks:
+  net:  
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
+
+volumes:
+  work:
+  conf:
+  sync_config:
+
+services:
+  adguard:
+    container_name: adguardhome
+    hostname: adguardhome
+    image: adguard/adguardhome:latest
+    ports:
+      - 53:53/udp
+      - 18002:80/tcp
+      - 48002:443
+      - 3000:3000/tcp
+      - 853:853
+      - 784:784/udp
+      - 8853:8853/udp
+      - 5443:5443
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - work:/opt/adguardhome/work
+      - conf:/opt/adguardhome/conf
+    networks:
+      net:
+        ipv4_address: 172.18.0.2
+    restart: unless-stopped
+
+  adguardhome-sync:
+    image: lscr.io/linuxserver/adguardhome-sync:latest
+    container_name: sync
+    environment:
+      - PUID=1001
+      - PGID=1000
+      - TZ=Europe/Moscow
+#      - CONFIGFILE=/config/adguardhome-sync.yaml #optional
+    volumes:
+      - sync_config:/config
+    ports:
+      - 18003:8080
+    restart: unless-stopped
